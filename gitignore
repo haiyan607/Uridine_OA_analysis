@@ -1,0 +1,107 @@
+# ==========================================================
+# R and RStudio
+# ==========================================================
+
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# ==========================================================
+# Operating-system files
+# ==========================================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================================
+# Temporary and backup files
+# ==========================================================
+
+*~
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*.log
+
+# Microsoft Office temporary files
+~$*.xlsx
+~$*.xls
+~$*.docx
+~$*.pptx
+
+# ==========================================================
+# Large single-cell and sequencing files
+# ==========================================================
+
+*.rds
+*.RDS
+*.h5
+*.h5ad
+*.loom
+
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bam
+*.sam
+
+*.mtx
+*.mtx.gz
+barcodes.tsv
+barcodes.tsv.gz
+features.tsv
+features.tsv.gz
+genes.tsv
+genes.tsv.gz
+
+# ==========================================================
+# Raw and processed data
+#
+# Keep README files so that the expected folder structure
+# remains visible in the repository.
+# ==========================================================
+
+data/raw/*
+!data/raw/README.md
+
+data/processed/*
+!data/processed/README.md
+
+# Keep the metadata folder available for small public tables
+# such as sample metadata.
+# ==========================================================
+
+# ==========================================================
+# Large local output files
+#
+# Small result tables and selected preview figures may still
+# be committed manually when needed.
+# ==========================================================
+
+results/figures/*.tif
+results/figures/*.tiff
+results/figures/*.pdf
+
+# ==========================================================
+# Local configuration files
+# ==========================================================
+
+config_local.R
+paths_local.R
+.env
+.env.*
+
+# ==========================================================
+# Optional local archives
+# ==========================================================
+
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
