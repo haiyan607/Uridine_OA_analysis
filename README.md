@@ -1,8 +1,6 @@
 # Uridine-Related Osteoarthritis Analysis
 
-This repository contains the R scripts used to reproduce selected bioinformatics analyses and figures in the associated manuscript. The current version includes single-cell RNA-sequencing analysis of GSE220243 and proteomics-based Venn and scatter plots.
-
-Additional scripts, including the GO functional-classification pie chart, may be added in later updates.
+This repository contains the R scripts used to reproduce selected bioinformatics analyses and figures in the associated manuscript. The current version includes single-cell RNA-sequencing analysis of GSE220243 and proteomics-based Venn plots, scatter plots and GO Molecular Function enrichment pie plot.
 
 ## Repository structure
 
@@ -20,7 +18,8 @@ Uridine_OA_analysis/
 │   │   └── 05_bubble_plot_SLC16A1_SLC28_family.R
 │   └── 02_proteomics/
 │       ├── 01_differential_protein_venn_plots.R
-│       └── 02_differential_protein_scatter_plot.R
+│       ├── 02_differential_protein_scatter_plot.R
+│       └── 03_go_mf_pie_plot.R
 ├── data/
 │   ├── raw/
 │   │   └── README.md
@@ -64,7 +63,9 @@ The target-gene bubble plots include:
 
 ### 2. Proteomics
 
-The proteomics scripts require a table containing the following columns:
+The proteomics analysis includes differential-protein visualization and GO Molecular Function enrichment analysis.
+
+The Venn plot and scatter plot scripts require a proteomics table containing the following columns:
 
 ```text
 Genes
@@ -82,6 +83,29 @@ The scripts generate:
 - coordinates and labels for selected proteins.
 
 For duplicated protein symbols, the row with the largest absolute fold change across the 30 μM and 100 μM conditions is retained.
+
+The GO Molecular Function pie plot script uses a dose-dependent DIA proteomics table containing the following columns:
+
+```text
+Protein.Group
+Protein.Ids
+Genes
+30uM-RATIO
+pvalue_30
+100uM-RATIO
+pvalue_100
+```
+
+The GO workflow includes:
+
+1. filtering proteins with both `pvalue_30 < 0.05` and `pvalue_100 < 0.05`;
+2. deduplicating `Protein.Group` by retaining the row with the smallest `pvalue_100`;
+3. extracting and splitting gene symbols from the `Genes` column;
+4. converting gene symbols from `SYMBOL` to `ENTREZID`;
+5. performing GO enrichment analysis using `clusterProfiler`;
+6. selecting predefined GO Molecular Function terms;
+7. calculating GeneRatio-based normalized proportions;
+8. generating the GO MF pie plot.
 
 ## R scripts
 
@@ -176,6 +200,71 @@ SLC16A1
 IGF2R
 ```
 
+#### `03_go_mf_pie_plot.R`
+
+Performs GO Molecular Function enrichment analysis based on dose-dependent DIA proteomics targets.
+
+The input file is expected to contain the following columns:
+
+```text
+Protein.Group
+Protein.Ids
+Genes
+30uM-RATIO
+pvalue_30
+100uM-RATIO
+pvalue_100
+```
+
+Proteins are first filtered using:
+
+```text
+pvalue_30 < 0.05
+pvalue_100 < 0.05
+```
+
+Duplicated `Protein.Group` entries are reduced by retaining the row with the smallest `pvalue_100`.
+
+The `Genes` column is then processed by:
+
+1. replacing commas with semicolons;
+2. splitting multiple gene symbols into separate rows;
+3. trimming spaces;
+4. removing empty values;
+5. retaining unique gene symbols.
+
+Gene symbols are converted from `SYMBOL` to `ENTREZID` using `org.Mm.eg.db`, and GO enrichment analysis is performed using `clusterProfiler::enrichGO`.
+
+The analysis focuses on the Molecular Function ontology:
+
+```text
+ont = "MF"
+pAdjustMethod = "BH"
+pvalueCutoff = 0.05
+qvalueCutoff = 0.05
+```
+
+The following predefined GO Molecular Function terms are selected for the final pie plot:
+
+```text
+ubiquitin-like protein ligase binding
+ubiquitin protein ligase binding
+ribonucleoprotein complex binding
+ATP hydrolysis activity
+unfolded protein binding
+protein folding chaperone
+mRNA binding
+structural constituent of ribosome
+```
+
+For the pie plot, the `GeneRatio` values of the selected terms are converted to numeric values and normalized internally among the selected GO terms.
+
+The final figure is saved as:
+
+```text
+results/figures/GO_MF_pieplot.pdf
+```
+
 ## Data availability and repository policy
 
 Raw single-cell sequencing files and large processed Seurat objects are not included in this repository because of their size. The single-cell dataset can be obtained from GEO under accession **GSE220243**.
@@ -211,10 +300,22 @@ GSM6797148_CartNorm1_matrix.mtx.gz
 
 ### Proteomics data
 
-When redistribution is permitted, place the proteomics input table at:
+For the Venn plot and scatter plot scripts, place the corresponding proteomics input table at:
 
 ```text
-data/raw/proteomics/20240205-DAP.xlsx
+data/raw/proteomics/
+```
+
+For the GO Molecular Function pie plot script, place the dose-dependent DIA proteomics table at:
+
+```text
+data/raw/proteomics/20240205-DIA-peptides.xlsx
+```
+
+The GO MF script reads the following sheet:
+
+```text
+符合剂量依赖性靶标
 ```
 
 If the table is supplied only as a manuscript supplementary file, download or copy it to the location above before running the proteomics scripts.
@@ -232,6 +333,7 @@ code/01_single_cell/05_bubble_plot_SLC16A1_SLC28_family.R
 
 code/02_proteomics/01_differential_protein_venn_plots.R
 code/02_proteomics/02_differential_protein_scatter_plot.R
+code/02_proteomics/03_go_mf_pie_plot.R
 ```
 
 The single-cell and proteomics workflows are independent and can be run separately.
@@ -249,14 +351,18 @@ dplyr
 tidyr
 stringr
 Matrix
+clusterProfiler
+org.Mm.eg.db
 ggplot2
 ggrepel
 ggvenn
+ggsci
 patchwork
 scales
 gtable
 grid
 here
+conflicted
 ```
 
 The exact R and package versions used for the analysis should be recorded in:
@@ -273,7 +379,7 @@ Figures are written to:
 results/figures/
 ```
 
-Summary tables and protein lists are written to:
+Summary tables, protein lists and derived analysis tables are written to:
 
 ```text
 results/tables/
@@ -290,10 +396,11 @@ Large RDS files and raw sequencing data should be excluded from GitHub using `.g
 ## Reproducibility notes
 
 - Run all scripts from the repository root.
-- The scripts use `here()` for relative paths.
+- The scripts use relative paths to ensure portability across systems.
 - Keep the original input column names unchanged.
+- The GO MF pie plot script uses `conflicted` and explicit `dplyr::` calls to avoid function conflicts from Bioconductor packages.
 - UMAP and other stochastic procedures use a fixed random seed where applicable.
-- Differences in Seurat, SeuratObject, Harmony or plot1cell versions may affect object structure or visual output.
+- Differences in Seurat, SeuratObject, Harmony, plot1cell, clusterProfiler or org.Mm.eg.db versions may affect object structure, gene ID conversion, enrichment results or visual output.
 
 ## Citation
 
