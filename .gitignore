@@ -1,5 +1,7 @@
 # ==========================================================
+
 # R and RStudio
+
 # ==========================================================
 
 .Rhistory
@@ -8,7 +10,9 @@
 .Rproj.user/
 
 # ==========================================================
+
 # Operating-system files
+
 # ==========================================================
 
 .DS_Store
@@ -16,7 +20,9 @@ Thumbs.db
 desktop.ini
 
 # ==========================================================
+
 # Temporary and backup files
+
 # ==========================================================
 
 *~
@@ -28,20 +34,31 @@ desktop.ini
 *.log
 
 # Microsoft Office temporary files
+
 ~$*.xlsx
 ~$*.xls
 ~$*.docx
 ~$*.pptx
 
 # ==========================================================
-# Large single-cell and sequencing files
+
+# Large R objects and single-cell data files
+
 # ==========================================================
 
 *.rds
 *.RDS
+*.rda
+*.RData
 *.h5
 *.h5ad
 *.loom
+
+# ==========================================================
+
+# Raw sequencing and alignment files
+
+# ==========================================================
 
 *.fastq
 *.fastq.gz
@@ -49,6 +66,7 @@ desktop.ini
 *.fq.gz
 *.bam
 *.sam
+*.cram
 
 *.mtx
 *.mtx.gz
@@ -60,35 +78,90 @@ genes.tsv
 genes.tsv.gz
 
 # ==========================================================
-# Raw and processed data
+
+# Raw data
+
 #
-# Keep README files so that the expected folder structure
-# remains visible in the repository.
+
+# Raw sequencing files and proteomics input tables are kept
+
+# locally and are not uploaded to the public repository.
+
+#
+
+# Keep data/raw/README.md so that the required filenames,
+
+# worksheet names and directory structure remain documented.
+
 # ==========================================================
 
 data/raw/*
 !data/raw/README.md
 
+# The following files are therefore excluded automatically:
+
+#
+
+# data/raw/GSE220243_RAW/
+
+# data/raw/proteomics/20240205-DAP.xlsx
+
+# data/raw/proteomics/20240205-DIA-peptides.xlsx
+
+# ==========================================================
+
+# Processed data
+
+#
+
+# Large intermediate Seurat objects and other processed
+
+# objects are not uploaded.
+
+#
+
+# Keep the README file that describes expected outputs.
+
+# ==========================================================
+
 data/processed/*
 !data/processed/README.md
 
-# Keep the metadata folder available for small public tables
-# such as sample metadata.
+# ==========================================================
+
+# Metadata
+
+#
+
+# Small public metadata tables in data/metadata/ are retained
+
+# in the repository and are not ignored.
+
 # ==========================================================
 
 # ==========================================================
-# Large local output files
+
+# Analysis results
+
 #
-# Small result tables and selected preview figures may still
-# be committed manually when needed.
+
+# Small CSV or TXT result tables may be committed.
+
+# Large high-resolution image files are excluded.
+
+# PDF and PNG figures may be retained when they are useful
+
+# for previewing or verifying the analysis.
+
 # ==========================================================
 
 results/figures/*.tif
 results/figures/*.tiff
-results/figures/*.pdf
 
 # ==========================================================
-# Local configuration files
+
+# Local configuration and private path files
+
 # ==========================================================
 
 config_local.R
@@ -97,7 +170,9 @@ paths_local.R
 .env.*
 
 # ==========================================================
-# Optional local archives
+
+# Local archives
+
 # ==========================================================
 
 *.zip
