@@ -1,6 +1,6 @@
 # Uridine-Related Osteoarthritis Analysis
 
-This repository contains the R scripts used to reproduce selected bioinformatics analyses and figures in the associated manuscript. The current version includes single-cell RNA-sequencing analysis of GSE220243 and proteomics-based Venn plots, scatter plots and GO Molecular Function enrichment pie plot.
+This repository contains the R scripts used to perform selected bioinformatics analyses and generate figures for the associated manuscript. The current version includes single-cell RNA-sequencing analysis of GSE220243 and proteomics-based Venn plots, scatter plots and a GO Molecular Function enrichment pie plot.
 
 ## Repository structure
 
@@ -258,6 +258,7 @@ structural constituent of ribosome
 ```
 
 For the pie plot, the `GeneRatio` values of the selected terms are converted to numeric values and normalized internally among the selected GO terms.
+This study performed GO Molecular Function enrichment analysis using standardized input data, filtering criteria and analysis procedures. If any variation is observed when rerunning the analysis, it may be attributable to updates to the GO and organism annotation databases. The analysis code and data-processing workflow remain unchanged.
 
 The final figure is saved as:
 
