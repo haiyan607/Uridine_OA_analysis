@@ -366,11 +366,11 @@ here
 conflicted
 ```
 
-The exact R and package versions used for the analysis should be recorded in:
+:::writing{variant="document" id="37641"}
+The R and package versions used in the current computational environment are recorded in:
 
 ```text
 docs/sessionInfo.txt
-```
 
 ## Outputs
 
@@ -401,7 +401,9 @@ Large RDS files and raw sequencing data should be excluded from GitHub using `.g
 - Keep the original input column names unchanged.
 - The GO MF pie plot script uses `conflicted` and explicit `dplyr::` calls to avoid function conflicts from Bioconductor packages.
 - UMAP and other stochastic procedures use a fixed random seed where applicable.
-- Differences in Seurat, SeuratObject, Harmony, plot1cell, clusterProfiler or org.Mm.eg.db versions may affect object structure, gene ID conversion, enrichment results or visual output.
+* Differences in Seurat, SeuratObject, Harmony and plot1cell versions may affect object structure or visual output.
+* Updates to clusterProfiler, GO annotation resources and organism annotation databases may affect gene identifier conversion, enriched GO terms and GeneRatio-based proportions.
+* If variations are observed when rerunning the GO Molecular Function analysis, they may be related to updates to the annotation databases.
 
 ## Citation
 
